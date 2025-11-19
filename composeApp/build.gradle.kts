@@ -51,6 +51,8 @@ kotlin {
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
+            // Animations (for AnimatedVisibility, etc.)
+            implementation(compose.animation)
             implementation(compose.material3)
             implementation(compose.ui)
             implementation(compose.components.resources)

@@ -1,6 +1,6 @@
 ﻿package com.example.demo.repository
 
-import com.example.demo.model.User
+import com.example.demo.core.domain.User
 import java.util.concurrent.atomic.AtomicLong
 
 class UserRepository {

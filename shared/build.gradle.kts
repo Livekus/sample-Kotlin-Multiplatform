@@ -32,9 +32,30 @@ kotlin {
         commonMain.dependencies {
             // put your Multiplatform dependencies here
             implementation(libs.kotlinx.serialization.json)
+            // Coroutines
+            implementation(libs.kotlinx.coroutines.core)
+            // Ktor Client core + JSON
+            implementation(libs.ktorClientCore)
+            implementation(libs.ktorClientContentNegotiation)
+            implementation(libs.ktorSerializationKotlinxJsonClient)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+        }
+        androidMain.dependencies {
+            implementation(libs.ktorClientOkhttp)
+        }
+        jvmMain.dependencies {
+            implementation(libs.ktorClientOkhttp)
+        }
+        iosMain.dependencies {
+            implementation(libs.ktorClientDarwin)
+        }
+        jsMain.dependencies {
+            implementation(libs.ktorClientJs)
+        }
+        wasmJsMain.dependencies {
+            implementation(libs.ktorClientJs)
         }
     }
 }
