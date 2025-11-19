@@ -44,6 +44,9 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            implementation(libs.koin.core)
+            // Ktor OkHttp engine for Android
+            implementation(libs.ktorClientOkhttp)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -55,6 +58,10 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(projects.shared)
+            // Ktor client for calling server REST API
+            implementation(libs.ktorClientCore)
+            implementation(libs.ktorClientContentNegotiation)
+            implementation(libs.ktorSerializationKotlinxJsonClient)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -63,12 +70,16 @@ kotlin {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutinesSwing)
             implementation(libs.koin.core)
-        }
-        androidMain.dependencies {
-            implementation(libs.koin.core)
+            // Ktor OkHttp engine for Desktop/JVM
+            implementation(libs.ktorClientOkhttp)
         }
         iosMain.dependencies {
             implementation(libs.koin.core)
+            implementation(libs.ktorClientDarwin)
+        }
+        jsMain.dependencies {
+            // Ktor JS engine so HttpClient works on web when used
+            implementation(libs.ktorClientJs)
         }
     }
 }
@@ -77,12 +88,19 @@ android {
     namespace = "com.example.demo"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
+    buildFeatures {
+        // Required to generate BuildConfig when using custom buildConfigField entries
+        buildConfig = true
+    }
+
     defaultConfig {
         applicationId = "com.example.demo"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
+        // Fallback BASE_URL; flavors can override
+        buildConfigField("String", "BASE_URL", "\"http://localhost:8080\"")
     }
     packaging {
         resources {

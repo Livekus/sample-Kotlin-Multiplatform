@@ -27,13 +27,19 @@ import demo.composeapp.generated.resources.compose_multiplatform
 fun App() {
     MaterialTheme {
         val vm: AppViewModel = run {
-            val owner = LocalViewModelStoreOwner.current
-            if (owner == null) {
-                // No ViewModelStoreOwner (e.g., desktop/web/preview) – try Koin inject, fallback to local instance
-                remember { DI.getAppViewModelOrNull() ?: AppViewModel() }
+            // Prefer DI-provided ViewModel when available (e.g., Desktop/JVM, Android, iOS)
+            val injected = remember { DI.getAppViewModelOrNull() }
+            if (injected != null) {
+                injected
             } else {
-                // Platforms with lifecycle owner (e.g., Android) – use androidx ViewModel
-                viewModel<AppViewModel>()
+                val owner = LocalViewModelStoreOwner.current
+                if (owner != null) {
+                    // Platforms with lifecycle owner (e.g., Android) – use androidx ViewModel
+                    viewModel<AppViewModel>()
+                } else {
+                    // No DI and no owner (e.g., web/preview) – last resort local instance
+                    remember { AppViewModel() }
+                }
             }
         }
         Column(
