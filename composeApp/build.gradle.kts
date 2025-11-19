@@ -72,6 +72,8 @@ kotlin {
             implementation(libs.koin.core)
             // Ktor OkHttp engine for Desktop/JVM
             implementation(libs.ktorClientOkhttp)
+            // SLF4J binding to remove "no providers" warning and enable logging
+            runtimeOnly(libs.logback)
         }
         iosMain.dependencies {
             implementation(libs.koin.core)
