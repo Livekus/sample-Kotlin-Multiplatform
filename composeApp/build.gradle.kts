@@ -67,6 +67,10 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+            // Coroutines core for runBlocking/withTimeout in common tests
+            implementation(libs.kotlinx.coroutines.core)
+            // Coroutines test utilities for multiplatform runTest
+            implementation(libs.kotlinx.coroutines.test)
         }
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
