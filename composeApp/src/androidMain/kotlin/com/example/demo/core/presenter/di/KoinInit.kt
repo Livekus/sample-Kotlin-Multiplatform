@@ -1,6 +1,7 @@
 package com.example.demo.core.presenter.di
 
 import com.example.demo.core.presenter.viewmodel.AppViewModel
+import com.example.demo.core.presenter.usecase.UserUsecase
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.context.startKoin
@@ -18,4 +19,7 @@ actual object DI {
 
     actual fun getAppViewModelOrNull(): AppViewModel? =
         runCatching { object : KoinComponent {}.get<AppViewModel>() }.getOrNull()
+
+    actual fun getUserUsecase(): UserUsecase =
+        object : KoinComponent {}.get()
 }

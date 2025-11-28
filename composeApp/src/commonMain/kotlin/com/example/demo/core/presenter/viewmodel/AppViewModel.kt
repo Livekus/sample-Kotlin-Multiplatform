@@ -4,15 +4,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.example.demo.core.data.HttpUserService
-import com.example.demo.core.data.UserRepositoryImpl
-import com.example.demo.core.env.Env
 import com.example.demo.core.env.Greeting
 import com.example.demo.core.presenter.usecase.UserUsecase
-import io.ktor.client.HttpClient
-import io.ktor.client.HttpClientConfig
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.serialization.kotlinx.json.json
+import com.example.demo.core.presenter.di.DI
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -59,21 +53,13 @@ class AppViewModel(
     // Convenience no-arg constructor for environments without DI
     constructor() : this(
         Greeting(),
-        defaultUserUsecase()
+        // Always obtain UserUsecase via DI facade; platform stubs provide safe fallback
+        DI.getUserUsecase()
     )
 
-    companion object {
-        private fun defaultUserUsecase(): UserUsecase {
-            val client = HttpClient {
-                install(ContentNegotiation) { json() }
-            }
-            val baseUrl = Env.baseUrl
-            val service = HttpUserService(client, baseUrl)
-            return UserUsecase(UserRepositoryImpl(service))
-        }
-    }
+    companion object
 
-    override fun onCleared() {
+    protected override fun onCleared() {
         super.onCleared()
         scope.cancel()
     }
